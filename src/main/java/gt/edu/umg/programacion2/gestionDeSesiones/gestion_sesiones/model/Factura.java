@@ -14,7 +14,7 @@ import jakarta.persistence.*;
 public class Factura {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long idFactura;
+private int idFactura;
 private String fechaEmision;
 private double monto;
 
@@ -25,15 +25,20 @@ private Cita cita;
     public Factura() {
     }
 
-    public Factura(String fechaEmision, double monto) {
+    public Factura(int idFactura, String fechaEmision, double monto) {
+        this.idFactura = idFactura;
         this.fechaEmision = fechaEmision;
         this.monto = monto;
     }
 
-    public Long getIdFactura() {
+    public int getIdFactura() {
         return idFactura;
     }
 
+    public void setIdFactura(int idFactura) {
+        this.idFactura = idFactura;
+    }
+    
     public String getFechaEmision() {
         return fechaEmision;
     }
