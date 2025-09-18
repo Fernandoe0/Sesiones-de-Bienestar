@@ -16,7 +16,7 @@ public class Servicio {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-private Long idServicio;
+private int idServicio;
 private String nombre;
 private String descripcion;
 private double precio;
@@ -27,17 +27,26 @@ private List<Cita> citas;
     public Servicio() {
     }
 
-    public Servicio(String nombre, String descripcion, double precio) {
+    /*public Servicio(String nombre, String descripcion, double precio) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+    }*/
+
+    public Servicio(int idServicio, String nombre, String descripcion, double precio) {
+        this.idServicio = idServicio;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
     }
+    
+    
 
-    public Long getIdServicio() {
+    public int getIdServicio() {
         return idServicio;
     }
-
-    public void setIdServicio(Long idServicio) {
+    
+    public void setIdServicio(int idServicio) {
         this.idServicio = idServicio;
     }
 

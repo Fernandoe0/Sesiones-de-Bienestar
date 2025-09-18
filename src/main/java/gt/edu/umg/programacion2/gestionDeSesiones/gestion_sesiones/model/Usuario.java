@@ -14,7 +14,7 @@ import jakarta.persistence.*;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUsuario;
+    private int idUsuario;
     private String username;
     private String password;
     private String rol; //administrador, recepcionista
@@ -22,14 +22,19 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String username, String password, String rol) {
+    public Usuario(int idUsuario, String username, String password, String rol) {
+        this.idUsuario = idUsuario;
         this.username = username;
         this.password = password;
         this.rol = rol;
     }
 
-    public Long getIdUsuario() {
+    public int getIdUsuario() {
         return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getUsername() {

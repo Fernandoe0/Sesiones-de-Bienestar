@@ -16,7 +16,7 @@ public class Cita {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-private Long idCita;
+private int idCita;
 private String fecha;
 private String hora;
 private String estado;
@@ -33,16 +33,29 @@ private Factura factura;
     public Cita() {
     }
 
-    public Cita(String fecha, String hora, String estado) {
+    /*public Cita(String fecha, String hora, String estado) {
+        this.fecha = fecha;
+        this.hora = hora;
+        this.estado = estado;
+    }*/
+
+    public Cita(int idCita, String fecha, String hora, String estado, Cliente cliente, Servicio servicio) {
+        this.idCita = idCita;
         this.fecha = fecha;
         this.hora = hora;
         this.estado = estado;
     }
 
-    public Long getIdCita() {
+    
+    public int getIdCita() {
         return idCita;
     }
 
+    public void setIdCita(int idCita) {
+        this.idCita = idCita;
+    }
+    
+    
     public String getFecha() {
         return fecha;
     }
@@ -65,6 +78,22 @@ private Factura factura;
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Servicio getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(Servicio servicio) {
+        this.servicio = servicio;
     }
 
 
