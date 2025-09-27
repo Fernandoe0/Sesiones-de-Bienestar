@@ -5,54 +5,52 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Servicio;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Repositorio;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorServicio;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.ServicioRepository;
+import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author BICHO
  */
+@Service
 public class ServicioService {
-    private final Repositorio<Servicio> repo;
-    private final ValidadorServicio val;
+    private final ServicioRepository repo;
 
 
 
-    public ServicioService(Repositorio<Servicio> repo, ValidadorServicio val) {
+    public ServicioService(ServicioRepository repo) {
         this.repo = repo;
-        this.val = val;
     }
     
     
     public String registrarServicio(Servicio s) {
     
 
-    if (!val.ServicioValido(s)){ return "Error: servicio nulo";}
-    if (!val.nombreValido(s.getNombre())){ return "Error: nombre inválido";}
-    if (!val.precioValido(s.getPrecio())){ return "Erorr: precio inválido";}
+    if (s == null) return "Error: Servicio nulo";
+    if (s.getNombre() == null || s.getNombre().trim().isEmpty()) 
+        return "Error: nombre inválido";
+    if (s.getPrecio() == null || s.getPrecio().compareTo(BigDecimal.ZERO) <= 0)
+        return "Error: precio inválido";
    
-    repo.agregar(s);
+    repo.save(s);
     return "Servicio registrado exitosamente";
     }
     
     public List<Servicio> listar() {
-        return repo.listar();
+        return repo.findAll();
     }
    
-    public Servicio buscarPorId(int idServicio) {
-        return repo.listar().stream()
-                .filter (f -> f.getIdServicio() == idServicio)
-                .findFirst()
-                .orElse(null);
+    public Servicio buscarPorId(Long idServicio) {
+        return repo.findById(idServicio).orElse(null);
     }
     
-    public boolean eliminar(int idServicio) {
-        Servicio s = buscarPorId(idServicio);
-        if (s != null) {
-            repo.eliminar(idServicio);
-            return true;
+    public String eliminar(Long idServicio) {
+        if (!repo.existsById(idServicio)) {
+            return "Error: servicio no encontrado";
         }
-        return false;
+            repo.deleteById(idServicio);
+            return "Servicio eliminado correctamente";
     }
 }

@@ -5,51 +5,47 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Factura;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Repositorio;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorFactura;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.FacturaRepository;
 import java.util.List;
+import org.springframework.stereotype.Service;
+
 
 /**
  *
  * @author BICHO
  */
+@Service
 public class FacturaService {
-    private final Repositorio<Factura> repo;
-    private final ValidadorFactura val;
+    private final FacturaRepository repo;
 
-    public FacturaService(Repositorio<Factura> repo, ValidadorFactura val) {
+    public FacturaService(FacturaRepository repo) {
         this.repo = repo;
-        this.val = val;
     }
     
     public String registrarFactura(Factura f) {
-        if (!val.facturaNoNula(f)) return "Error: factura nula";
-        if (!val.fechaValida(f.getFechaEmision())) return "Error: fecha inválida";
-        if (!val.montoValido(f.getMonto())) return "Error: monto inválido";
-        if (!val.idUnico(f.getIdFactura(), repo.listar())) return "Error: Id duplicado";
+        if (f == null) return "Error: factura nula";
+        if (f.getFechaEmision() == null) return "Error: fecha inválida";
+        if (f.getMonto() == null || f.getMonto().doubleValue() <= 0)
+            return "Error monto inválido";
         
-        repo.agregar(f);
+        repo.save(f);
         return "Factura registrada exitosamente";
        
     }
     
     public List<Factura> listar(){
-        return repo.listar();
+        return repo.findAll();
     }
     
-    public Factura buscarPorId(int idFactura) {
-        return repo.listar().stream()
-                .filter(f -> f.getIdFactura() == idFactura)
-                .findFirst()
-                .orElse(null);
+    public Factura buscarPorId(Long idFactura) {
+        return repo.findById(idFactura).orElse(null);
     }
     
-    public boolean eliminar(int idFactura) {
-        Factura f = buscarPorId(idFactura);
-        if (f != null) {
-            repo.eliminar(idFactura);
-            return true;
+    public String eliminar(Long idFactura) {
+        if (!repo.existsById(idFactura)) {
+            return "Error: Factura no encontrada";
         }
-        return false;
+        repo.deleteById(idFactura);
+        return "Factura eliminada correctamente";
     }
 }

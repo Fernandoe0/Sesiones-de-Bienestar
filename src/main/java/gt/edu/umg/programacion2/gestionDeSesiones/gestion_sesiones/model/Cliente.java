@@ -11,39 +11,33 @@ import java.util.List;
  *
  * @author BICHO
  */
-//@Entity
+@Entity
+@Table(name="clientes")
 public class Cliente {
-//@Id
-//@GeneratedValue(strategy = GenerationType.IDENTITY)
-private int idCliente;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id_cliente")
+private Long idCliente;
 private String nombre;
+@Column(unique = true, nullable = false)
 private String correo;
 private String telefono;
 
-//@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
 
 private List<Cita> citas;
 
 public Cliente() {}
 
-    /*public Cliente(String nombre, String correo, String telefono) {
+    public Cliente(String nombre, String correo, String telefono) {
         this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
-    }*/
+    }
     
-    public Cliente(int idCliente, String nombre, String correo, String telefono) {
-        this.idCliente = idCliente;
-        this.nombre = nombre;
-        this.correo = correo;
-        this.telefono = telefono;
-    }
 
-    public int getIdCliente() {
+    public Long getIdCliente() {
         return idCliente;
-    }
-    public void setIdCliente(int idCliente) { 
-        this.idCliente = idCliente;
     }
 
     public String getNombre() {

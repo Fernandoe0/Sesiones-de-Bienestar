@@ -5,20 +5,23 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
  * @author BICHO
  */
 @Entity
+@Table(name = "cita")
 public class Cita {
     
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-private int idCita;
-private String fecha;
-private String hora;
+@Column(name = "id_cita")
+private Long idCita;
+private LocalDate fecha;
+private LocalTime hora;
 private String estado;
 
 @ManyToOne
@@ -33,42 +36,29 @@ private Factura factura;
     public Cita() {
     }
 
-    /*public Cita(String fecha, String hora, String estado) {
-        this.fecha = fecha;
-        this.hora = hora;
-        this.estado = estado;
-    }*/
-
-    public Cita(int idCita, String fecha, String hora, String estado, Cliente cliente, Servicio servicio) {
-        this.idCita = idCita;
+    public Cita(LocalDate fecha, LocalTime hora, String estado) {
         this.fecha = fecha;
         this.hora = hora;
         this.estado = estado;
     }
-
     
-    public int getIdCita() {
+    public Long getIdCita() {
         return idCita;
     }
-
-    public void setIdCita(int idCita) {
-        this.idCita = idCita;
-    }
     
-    
-    public String getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    public String getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
     }
 
@@ -94,6 +84,14 @@ private Factura factura;
 
     public void setServicio(Servicio servicio) {
         this.servicio = servicio;
+    }
+
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
     }
 
 

@@ -6,49 +6,49 @@ package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Usuario;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Repositorio;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.UsuarioRepository;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorUsuario;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author BICHO
  */
+@Service
 public class UsuarioService {
-    private final Repositorio<Usuario> repo;
-    private final ValidadorUsuario val;
+    private final UsuarioRepository repo;
 
-    public UsuarioService(Repositorio<Usuario> repo, ValidadorUsuario val) {
+    public UsuarioService(UsuarioRepository repo) {
         this.repo = repo;
-        this.val = val;
     }
     
     public String RegistrarUsuario(Usuario u) {
-        if (!val.usuarioNoNulo(u)) return "Error: Usuario no válido";
-        if (!val.usernameValido(u.getUsername())) return "Error: Username inválido";
-        if (!val.rolValido(u.getRol())) return "Error: rol inválido";
-        if (!val.usernameUnico(u.getUsername(), repo.listar())) return "Error: username duplicado";
-    
-    repo.agregar(u);
+        if (u == null) return "Error usuario inválido";
+        if (u.getUsername() == null || u.getUsername().trim().isEmpty())
+            return "Error: Username Inválido";
+        if(u.getRol() == null || u.getRol().trim().isEmpty())
+            return "Error: rol inválido";
+        if (repo.existsByUsername(u.getUsername()))
+            return "Error: Username duplicado";
+        
+    repo.save(u);
     return "Usuario registrado exitosamente";
     }
     
  public List<Usuario> listar(){
-     return repo.listar();
+     return repo.findAll();
  }
  
- public Usuario buscarPorId(int idUsuario) {
-     return repo.listar().stream()
-             .filter(u -> u.getIdUsuario() == idUsuario)
-             .findFirst()
-             .orElse(null);
+ public Usuario buscarPorId(Long idUsuario) {
+     return repo.findById(idUsuario).orElse(null);
  }
  
- public boolean eliminar(int idUsuario) {
-     Usuario usuario = buscarPorId(idUsuario);
-     if (usuario != null) {
-         repo.eliminar(usuario.getIdUsuario());
-         return true;
+ public String eliminar(Long idUsuario) {
+     if(!repo.existsById(idUsuario)) {
+         return "Error: Usuario no encontrado";
      }
-     return false;
+     repo.deleteById(idUsuario);
+     return "Usuario eliminado correctamente";
  }
 }

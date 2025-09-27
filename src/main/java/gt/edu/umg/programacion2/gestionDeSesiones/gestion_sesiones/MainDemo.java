@@ -9,11 +9,6 @@ import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Factura
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Cliente;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Servicio;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Usuario;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.CitaRepositorioEnMemoria;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.ClienteRepositorioEnMemoria;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.FacturaRepositorioEnMemoria;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.ServicioRepositorioEnMemoria;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.UsuarioRepositorioEnMemoria;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service.CitaService;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service.ClienteService;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service.FacturaService;
@@ -29,6 +24,7 @@ import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.Va
  *
  * @author BICHO
  */
+/*
 public class MainDemo {
    public static void main(String[] args) {
        ClienteRepositorioEnMemoria repo = new ClienteRepositorioEnMemoria();
@@ -94,4 +90,4 @@ public class MainDemo {
        usuarioService.listar().forEach(u -> System.out.println(u.getUsername() + "(" + u.getRol() + ")"));
        
    }
-}
+}*/

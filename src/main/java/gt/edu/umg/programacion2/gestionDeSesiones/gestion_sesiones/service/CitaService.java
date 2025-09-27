@@ -5,46 +5,50 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Cita;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Repositorio;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorCita;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.CitaRepository;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author BICHO
  */
+@Service
 public class CitaService {
-     private final Repositorio<Cita> repo;
-    private final ValidadorCita val;
+     private final CitaRepository repo;
 
-    public CitaService(Repositorio<Cita> repo, ValidadorCita val) {
+    public CitaService(CitaRepository repo) {
         this.repo = repo;
-        this.val = val;
+
     }
     
     public String registrarCita(Cita nueva) {
-        if (!val.ClienteValido(nueva.getCliente())){ return "Error: cliente inválido";}
-        if (!val.ServicioValido(nueva.getServicio())){ return "Error: servicio inválido";}
-        if (!val.citaUnica(nueva, repo.listar())) { return "Error: ya hay cita asignada";}
-        repo.agregar(nueva);
-        return "Cita registrada";
-    }
-    
-    public List<Cita> listar() { return repo.listar();}
-    
-    public Cita buscarPorId(int idCita) {
-        return repo.listar().stream()
-                .filter(e -> e.getIdCita() == idCita)
-                .findFirst()
-                .orElse(null);
-    }
-    
-    public boolean eliminar(int idCita) {
-        Cita e = buscarPorId(idCita);
-        if (e != null) {
-            repo.eliminar(idCita);
-            return true;
+        if (nueva.getCliente() == null){
+          return "Error: Cliente no especificado";      
         }
-        return false;
+        List<Cita> citasExistentes = repo.findByClienteIdCliente(nueva.getCliente().getIdCliente());
+        if(!citasExistentes.isEmpty()) {
+            return "Error: Cliente ya con cita";
+        }
+        repo.save(nueva);
+        return "Cita Registrada";
+    }
+    
+    public List<Cita> listar() {
+        return repo.findAll();
+    }
+    
+    public Cita buscarPorId(Long idCita) {
+        Optional<Cita> optionalCita = repo.findById(idCita);
+        return optionalCita.orElse(null);
+    }
+    
+    public String eliminar(Long idCita) {
+        if (!repo.existsById(idCita)) {
+            return "Error: Cita no encontrada";
+        }
+        repo.deleteById(idCita);
+        return "Cita eliminada correctamente";
     }
 }

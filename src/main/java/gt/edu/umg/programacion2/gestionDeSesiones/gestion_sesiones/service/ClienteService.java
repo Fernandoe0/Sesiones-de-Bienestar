@@ -5,45 +5,47 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Cliente;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Repositorio;
-import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorCliente;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.ClienteRepository;
+
 import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author BICHO
  */
+@Service
 public class ClienteService {
-    private final Repositorio<Cliente> repo;
-    private final ValidadorCliente val;
+    private final ClienteRepository repo;
 
-    public ClienteService(Repositorio<Cliente> repo, ValidadorCliente val) {
+
+    public ClienteService(ClienteRepository repo) {
         this.repo = repo;
-        this.val = val;
     }
     
     public String registrarCliente(Cliente c) {
-        if (!val.correoValido(c.getCorreo())) return "Error: correo inválido";
-        if (!val.correoUnico(c.getCorreo(), repo.listar())) return "Error: correo duplicado";
-        repo.agregar(c);
-        return "Cliente registrado";
-    }
-    
-    public List<Cliente> listar() { return repo.listar();}
-    
-    public Cliente buscarPorId(int idCliente) {
-        return repo.listar().stream()
-                .filter(c ->c.getIdCliente() == idCliente)
-                .findFirst()
-                .orElse(null);
-    }
-    
-    public boolean eliminar(int idCliente) {
-        Cliente c = buscarPorId(idCliente);
-        if (c != null) {
-            repo.eliminar(idCliente);
-            return true;
+        if (repo.existsByCorreo(c.getCorreo())) {
+            return "Error: correo duplicado";
         }
-        return false;
+        repo.save(c);
+        return "Cliente registrado en BD";
+    }
+    
+    public List<Cliente> listar() {
+        return repo.findAll();
+    }
+    
+    public Cliente buscarPorId(Long idCliente) {
+        Optional<Cliente> optionalCliente = repo.findById(idCliente);
+        return optionalCliente.orElse(null);
+    }
+    
+    public String eliminar(Long idCliente) {
+        if (!repo.existsById(idCliente)){
+            return "Error: Cliente no encontrado";
+        }
+        repo.deleteById(idCliente);
+        return "Cliente eliminado correctamente";
     }
  }

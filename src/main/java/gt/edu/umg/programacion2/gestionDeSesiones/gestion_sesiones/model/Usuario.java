@@ -11,30 +11,29 @@ import jakarta.persistence.*;
  * @author BICHO
  */
 @Entity
+@Table(name="usuarios")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUsuario;
+    private Long idUsuario;
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false, length = 20)
     private String rol; //administrador, recepcionista
 
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, String username, String password, String rol) {
-        this.idUsuario = idUsuario;
+    public Usuario(String username, String password, String rol) {
         this.username = username;
         this.password = password;
         this.rol = rol;
     }
 
-    public int getIdUsuario() {
+    public Long getIdUsuario() {
         return idUsuario;
-    }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getUsername() {

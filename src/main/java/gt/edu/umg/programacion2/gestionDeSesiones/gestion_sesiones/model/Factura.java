@@ -5,54 +5,64 @@
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  *
  * @author BICHO
  */
 @Entity
+@Table (name = "factura")
 public class Factura {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private int idFactura;
-private String fechaEmision;
-private double monto;
+@Column(name = "id_factura")
+private Long idFactura;
+@Column(nullable=false)
+private LocalDate fechaEmision;
+@Column(nullable = false)
+private BigDecimal monto;
 
 @OneToOne
-@JoinColumn(name = "cita_id")
+@JoinColumn(name = "cita_id", nullable = false, unique = true)
 private Cita cita;
 
     public Factura() {
     }
 
-    public Factura(int idFactura, String fechaEmision, double monto) {
-        this.idFactura = idFactura;
+    public Factura(LocalDate fechaEmision, BigDecimal monto, Cita cita) {
         this.fechaEmision = fechaEmision;
         this.monto = monto;
+        this.cita = cita;
     }
 
-    public int getIdFactura() {
+    public Long getIdFactura() {
         return idFactura;
     }
-
-    public void setIdFactura(int idFactura) {
-        this.idFactura = idFactura;
-    }
     
-    public String getFechaEmision() {
+    public LocalDate getFechaEmision() {
         return fechaEmision;
     }
 
-    public void setFechaEmision(String fechaEmision) {
+    public void setFechaEmision(LocalDate fechaEmision) {
         this.fechaEmision = fechaEmision;
     }
 
-    public double getMonto() {
+    public BigDecimal getMonto() {
         return monto;
     }
 
-    public void setMonto(double monto) {
+    public void setMonto(BigDecimal monto) {
         this.monto = monto;
+    }
+
+    public Cita getCita() {
+        return cita;
+    }
+
+    public void setCita(Cita cita) {
+        this.cita = cita;
     }
 
 
