@@ -12,11 +12,14 @@ import java.util.List;
  * @author BICHO
  */
 @Entity
+@Table(name="clientes")
 public class Cliente {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id_cliente")
 private Long idCliente;
 private String nombre;
+@Column(unique = true, nullable = false)
 private String correo;
 private String telefono;
 
@@ -26,11 +29,13 @@ private List<Cita> citas;
 
 public Cliente() {}
 
+public Cliente(Long idCliente) { this.idCliente = idCliente;}
     public Cliente(String nombre, String correo, String telefono) {
         this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
     }
+    
 
     public Long getIdCliente() {
         return idCliente;
