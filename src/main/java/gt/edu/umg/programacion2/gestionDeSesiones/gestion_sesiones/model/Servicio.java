@@ -33,6 +33,7 @@ private List<Cita> citas = new ArrayList<>();
     public Servicio() {
     }
 
+    public Servicio(Long idServicio) {this.idServicio = idServicio;}
     public Servicio(String nombre, String descripcion, BigDecimal precio) {
         this.nombre = nombre;
         this.descripcion = descripcion;

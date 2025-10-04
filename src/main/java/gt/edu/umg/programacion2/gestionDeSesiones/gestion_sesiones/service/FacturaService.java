@@ -4,7 +4,9 @@
  */
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.audit.Auditable;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Factura;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.notification.NotificationService;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.FacturaRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,13 @@ public class FacturaService {
         this.repo = repo;
     }
     
-    public String registrarFactura(Factura f) {
-        if (f == null) return "Error: factura nula";
-        if (f.getFechaEmision() == null) return "Error: fecha inválida";
-        if (f.getMonto() == null || f.getMonto().doubleValue() <= 0)
-            return "Error monto inválido";
-        
-        repo.save(f);
-        return "Factura registrada exitosamente";
-       
-    }
+    @Auditable("Emitir Factura")
+public String registrarFactura(Factura factura) {
+    Factura emitida = repo.save(factura);
+    NotificationService.getInstance().notify("factura.emitida",
+        "Factura " + emitida.getIdFactura() + " por Q" + emitida.getMonto());
+    return "Registro exitoso de factura id=" + emitida.getIdFactura();
+}
     
     public List<Factura> listar(){
         return repo.findAll();

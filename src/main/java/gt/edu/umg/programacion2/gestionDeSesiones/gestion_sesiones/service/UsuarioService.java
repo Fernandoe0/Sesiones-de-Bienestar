@@ -40,6 +40,7 @@ public class UsuarioService {
      return repo.findAll();
  }
  
+ 
  public Usuario buscarPorId(Long idUsuario) {
      return repo.findById(idUsuario).orElse(null);
  }
@@ -50,5 +51,11 @@ public class UsuarioService {
      }
      repo.deleteById(idUsuario);
      return "Usuario eliminado correctamente";
+ }
+ 
+ public Usuario login(String username, String password){
+     return repo.findByUsername(username)
+             .filter(u -> u.getPassword().equals(password)) //TODO: BCrypt en prod
+             .orElse(null);
  }
 }

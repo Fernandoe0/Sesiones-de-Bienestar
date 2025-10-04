@@ -29,6 +29,7 @@ private List<Cita> citas;
 
 public Cliente() {}
 
+public Cliente(Long idCliente) { this.idCliente = idCliente;}
     public Cliente(String nombre, String correo, String telefono) {
         this.nombre = nombre;
         this.correo = correo;

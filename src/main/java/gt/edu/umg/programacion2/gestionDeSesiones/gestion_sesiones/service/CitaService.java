@@ -4,10 +4,13 @@
  */
 package gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service;
 
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.audit.Auditable;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Cita;
+import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.notification.NotificationService;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.CitaRepository;
 import java.util.List;
 import java.util.Optional;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,17 +26,19 @@ public class CitaService {
 
     }
     
-    public String registrarCita(Cita nueva) {
-        if (nueva.getCliente() == null){
-          return "Error: Cliente no especificado";      
-        }
-        List<Cita> citasExistentes = repo.findByClienteIdCliente(nueva.getCliente().getIdCliente());
-        if(!citasExistentes.isEmpty()) {
-            return "Error: Cliente ya con cita";
-        }
-        repo.save(nueva);
-        return "Cita Registrada";
-    }
+   @Auditable("Registrar Cita")
+public String registrarCita(Cita nueva) {
+    if(nueva == null) return "Error: Cita inválida";
+    if(nueva.getFecha() == null) return "Error: ingrese fecha";
+    if(nueva.getHora() == null) return "Error: ingrese Hora";
+    Cita creada = repo.save(nueva);
+    String nombreCliente = (creada.getCliente() != null && creada.getCliente().getNombre() != null)
+            ? creada.getCliente().getNombre()
+            : "N/D";
+    NotificationService.getInstance().notify("cita.creada",
+        "Cita " + creada.getIdCita() + " para " + creada.getCliente().getNombre());
+    return "Registro exitoso de cita id=" + creada.getIdCita();
+}
     
     public List<Cita> listar() {
         return repo.findAll();

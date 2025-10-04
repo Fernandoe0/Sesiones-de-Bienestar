@@ -16,7 +16,7 @@ las funcionalidades principales son: registro de clientes, facturación, histori
 
 
 
-AVANCE 03
+ENTREGA 03
 
 \# Sesiones de Bienestar
 
@@ -113,6 +113,32 @@ POST /facturas
 &nbsp; "cita": { "idCita": 1 }
 
 }
+
+## Entrega 04 – Patrones, Autenticación y Auditoría
+
+### Patrones
+- **Singleton + Observer**: `notification/NotificationService`, `NotificationListener`, `ConsoleNotifier`. Registro en `config/NotificationConfig`.
+- **Facade**: `facade/SystemFacade.java` (método `crearCitaConFactura(...)`).
+
+### Autenticación
+- JWT (`security/*`) con endpoint `POST /auth/login`.
+- Endpoints protegidos con header `Authorization: Bearer <token>`.
+
+### Auditoría
+- `audit/AuditLog`, `AuditLogRepository`, `Auditable`, `AuditAspect`.
+- Métodos anotados como `@Auditable("Registrar Cita")` registran en `audit_logs`.
+
+### Pruebas rápidas (cURL)
+1. Login → obtener token (ver comandos).
+2. Crear Cliente y Servicio (por API o SQL).
+3. Crear Cita con token.
+4. Ver Citas y `audit_logs`.
+
+### Evidencias
+- Captura de `/auth/login` (token).
+- POST y GET de `/citas`.
+- Consola con `[NOTIF]`.
+- Consulta `SELECT * FROM audit_logs`.
 
 
 
