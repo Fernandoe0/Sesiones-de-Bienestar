@@ -11,12 +11,16 @@ import jakarta.persistence.*;
  * @author BICHO
  */
 @Entity
+@Table(name="usuarios")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUsuario;
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false, length = 20)
     private String rol; //administrador, recepcionista
 
     public Usuario() {
