@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://crossover.proxy.rlwy.net:10196/railway?sslmode=require
+    username: postgres
+    password: HSPMyEVziWxWwThSWAGvRfbgDzsEDPEP
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      minimum-idle: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  flyway:
+    enabled: true
+
+jwt:
+  secret: 53cb13957197d788d5e6fef23b05e9e0083007caf8d7e406d02e385bdefa51ab
+  expiration: 3600000
+
+
