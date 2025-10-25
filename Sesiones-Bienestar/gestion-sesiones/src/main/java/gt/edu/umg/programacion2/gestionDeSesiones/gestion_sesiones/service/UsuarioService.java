@@ -9,6 +9,8 @@ import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.Re
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.repository.UsuarioRepository;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.validation.ValidadorUsuario;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,9 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
     private final UsuarioRepository repo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository repo) {
+    public UsuarioService(UsuarioRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
+        this.passwordEncoder = passwordEncoder;
     }
     
     public String RegistrarUsuario(Usuario u) {
@@ -53,9 +57,28 @@ public class UsuarioService {
      return "Usuario eliminado correctamente";
  }
  
- public Usuario login(String username, String password){
-     return repo.findByUsername(username)
-             .filter(u -> u.getPassword().equals(password)) //TODO: BCrypt en prod
-             .orElse(null);
- }
+ public Usuario login(String username, String password) {
+        Usuario usuario = repo.findByUsername(username).orElse(null);
+        
+        if (!BCrypt.checkpw(password, usuario.getPassword())) {
+            return null;
+        }
+        return usuario;
+}
+ 
+ 
+  public String cifrarContrasena(String contrasena) {
+        String salt = BCrypt.gensalt();
+
+        return BCrypt.hashpw(contrasena, salt);
+    }
+
+    public boolean verificarContrasena(String contrasena, String contrasenaCifrada) {
+
+        return BCrypt.checkpw(contrasena, contrasenaCifrada);
+    }
+    
+    public void guardarUsuario(Usuario usuario) {
+        String contrasenaCifrada = cifrarContrasena(usuario.getPassword());
+        usuario.setPassword(contrasenaCifrada); }
 }

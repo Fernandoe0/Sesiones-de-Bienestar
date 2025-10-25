@@ -8,6 +8,8 @@ public class GestionSesionesApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GestionSesionesApplication.class, args);
+                 
+        }
 	}
 
-}
+

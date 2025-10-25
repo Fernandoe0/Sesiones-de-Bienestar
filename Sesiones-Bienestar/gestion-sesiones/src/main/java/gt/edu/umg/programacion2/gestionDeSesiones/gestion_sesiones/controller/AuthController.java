@@ -8,6 +8,7 @@ import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.model.Usuario
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.security.JwtUtil;
 import gt.edu.umg.programacion2.gestionDeSesiones.gestion_sesiones.service.UsuarioService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,19 +26,22 @@ public class AuthController {
         this.usuarioService = usuarioService;
         this.jwtUtil = jwtUtil;
     }
-    
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/login")
-    public Map<String,String> login(@RequestBody Map<String,String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
-        Usuario u = usuarioService.login(username, password);
-        if (u == null) throw new RuntimeException("Credenciales inválidas");
-        
-        Map<String,Object> claims = new HashMap<>();
-        claims.put("role", u.getRol());
-        String token = jwtUtil.generateToken(u.getUsername(), claims);
-        return Map.of("token", token);
-    }
+public Map<String,String> login(@RequestBody Map<String,String> body) {
+    String username = body.get("username");
+    String password = body.get("password");
+    Usuario u = usuarioService.login(username, password);
+    if (u == null) throw new RuntimeException("Credenciales inválidas");
+
+    // Obtener el rol del usuario y convertirlo a una lista si es necesario
+    List<String> roles = List.of(u.getRol()); // Si getRol devuelve un solo rol, lo ponemos en una lista
+
+    // Generar el token con la lista de roles
+    String token = jwtUtil.generateToken(u.getUsername(), roles);
+    
+    return Map.of("token", token);
+}
     
     
 }
